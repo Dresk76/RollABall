@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float harvestTime = 0.1f;
+    public TrapDoor trapDoor;
 
-    // Update is called once per frame
-    void Update()
+
+    private void OnTriggerEnter(Collider other) 
     {
-        
+        Destroy(gameObject, harvestTime);
+        trapDoor.OpenTrapDoor();
     }
 }
