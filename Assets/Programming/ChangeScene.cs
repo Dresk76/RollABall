@@ -6,6 +6,6 @@ public class ChangeScene : MonoBehaviour
 {
     public void ChangeScenes()
     {
-        print("c.c");
+        print("Cambio de Scene");
     }
 }

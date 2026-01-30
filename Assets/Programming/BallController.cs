@@ -1,10 +1,15 @@
+using System;
+using RollABall.Programming.Core;
+using RollABall.Programming.Interfaces;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 // Requiere que el GameObject tenga un componente Rigidbody (física)
 [RequireComponent(typeof(Rigidbody))]
-public class BallController : MonoBehaviour
+public class BallController : MonoBehaviour, IKeyRecovered
 {
+    [SerializeField] private int _keys;
+    
     // [Header] crea encabezados organizados en el Inspector de Unity
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 50f; // Fuerza aplicada al movimiento
@@ -14,6 +19,21 @@ public class BallController : MonoBehaviour
     private float     _horizontalInput;  // Input horizontal (teclas A/D o flechas)
     private float     _verticalInput;    // Input vertical (teclas W/S o flechas)
 
+
+    private void OnEnable()
+    {
+        EventManager.OnKeyRecovered += KeyRecovered;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnKeyRecovered -= KeyRecovered;
+    }
+
+    private void KeyRecovered(int keyValue)
+    {
+        _keys = keyValue;
+    }
 
     // Awake se ejecuta al cargar el script, ideal para inicializaciones de referencias
     private void Awake()
@@ -52,5 +72,10 @@ public class BallController : MonoBehaviour
         {
             _rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
         }
+    }
+
+    public void OnKeyRecovered(int keyValue)
+    {
+        _keys = keyValue;
     }
 }
