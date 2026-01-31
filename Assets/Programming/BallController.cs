@@ -20,20 +20,20 @@ public class BallController : MonoBehaviour, IKeyRecovered
     private float     _verticalInput;    // Input vertical (teclas W/S o flechas)
 
 
-    private void OnEnable()
-    {
-        EventManager.OnKeyRecovered += KeyRecovered;
-    }
+    // private void OnEnable()
+    // {
+    //     EventManager.OnKeyRecovered += KeyRecovered;
+    // }
 
-    private void OnDisable()
-    {
-        EventManager.OnKeyRecovered -= KeyRecovered;
-    }
+    // private void OnDisable()
+    // {
+    //     EventManager.OnKeyRecovered -= KeyRecovered;
+    // }
 
-    private void KeyRecovered(int keyValue)
-    {
-        _keys = keyValue;
-    }
+    // private void KeyRecovered(int keyValue)
+    // {
+    //     _keys = keyValue;
+    // }
 
     // Awake se ejecuta al cargar el script, ideal para inicializaciones de referencias
     private void Awake()

@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
 using RollABall.Programming.Core;
+using RollABall.Programming.Interfaces;
 
-public class TrapDoor : MonoBehaviour
+public class TrapDoor : MonoBehaviour, ITrapOpenAble
 {
     public ChangeScene changeScene;
 
@@ -21,5 +22,8 @@ public class TrapDoor : MonoBehaviour
         gameObject.SetActive(state);
         //changeScene.ChangeScenes();
     }
-
+public void OnTrapOpen(bool status)
+ {
+    Debug.Log("My Status Is.. " + status);
+ }
 }

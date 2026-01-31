@@ -8,4 +8,13 @@ public class ChangeScene : MonoBehaviour
     {
         print("Cambio de Scene");
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Entry");
+            // Destroy(other.gameObject);
+        }
+    }
 }

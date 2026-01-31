@@ -18,6 +18,6 @@ public class Key : MonoBehaviour
         doorOpened?.OnKeyRecovered(KeyValue); // ?. Si es != null
         
         // Pasar evento de llave recuperada por EventManager
-        EventManager.KeyRecovered(KeyValue);
+        // EventManager.KeyRecovered(KeyValue);
     }
 }
