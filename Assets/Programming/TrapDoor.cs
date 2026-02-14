@@ -1,11 +1,11 @@
-using System;
 using UnityEngine;
 using RollABall.Programming.Core;
-using RollABall.Programming.Interfaces;
 
-public class TrapDoor : MonoBehaviour, ITrapOpenAble
+public class TrapDoor : MonoBehaviour
 {
     public ChangeScene changeScene;
+    [SerializeField] private int requiredKeys;
+    private int _foundKey;
 
     private void OnEnable()
     {
@@ -17,13 +17,18 @@ public class TrapDoor : MonoBehaviour, ITrapOpenAble
         EventManager.OnOpenTrapDoor -= OnOpenTrapDoor;
     }
 
-    private void OnOpenTrapDoor(bool state)
+    private void OnOpenTrapDoor()
     {
-        gameObject.SetActive(state);
+        _foundKey ++;
+
+        if (requiredKeys != _foundKey)
+        {
+            Debug.Log("Faltan llaves");
+            return;
+        }
+
+        Debug.Log("Puerta abierta!");
+        gameObject.SetActive(false);
         //changeScene.ChangeScenes();
     }
-public void OnTrapOpen(bool status)
- {
-    Debug.Log("My Status Is.. " + status);
- }
 }

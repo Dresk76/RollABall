@@ -348,6 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeScene: {fileID: 276373046}
+  requiredKeys: 1
 --- !u!1 &254432368
 GameObject:
   m_ObjectHideFlags: 0

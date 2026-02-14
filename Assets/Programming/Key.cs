@@ -14,10 +14,10 @@ public class Key : MonoBehaviour
         Destroy(gameObject, harvestTime);
 
         // Pasar evento de llave recuperada por Interface
-        var doorOpened = other.GetComponent<IKeyRecovered>();
-        doorOpened?.OnKeyRecovered(KeyValue); // ?. Si es != null
-        
-        // Pasar evento de llave recuperada por EventManager
-        // EventManager.KeyRecovered(KeyValue);
+        var keyRecovered = other.GetComponent<IKeyRecovered>();
+        keyRecovered?.OnKeyRecovered(KeyValue); // ?. Si es != null
+
+        // Indicar que se recolecto una llave
+        EventManager.OpenTrapDoor();
     }
 }
