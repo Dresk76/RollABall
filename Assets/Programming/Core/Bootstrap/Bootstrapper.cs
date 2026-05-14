@@ -13,7 +13,6 @@ namespace RollABall.Core.Bootstrap
         [Header("Global Systems")]
         [SerializeField] private MonoBehaviour[] _globalSystems;
 
-
         private void Awake()
         {
             if (_instance != null)

@@ -10,13 +10,13 @@ namespace RollABall.Presentation.UI.Buttons
         public event Action HoverExited;
 
         public void OnPointerEnter(PointerEventData eventData)
-    {
-        HoverEntered?.Invoke();
-    }
+        {
+            HoverEntered?.Invoke();
+        }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        HoverExited?.Invoke();
-    }
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            HoverExited?.Invoke();
+        }
     }
 }

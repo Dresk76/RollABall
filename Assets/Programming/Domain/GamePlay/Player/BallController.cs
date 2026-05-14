@@ -1,67 +1,69 @@
-using RollABall.Programming.Core.Managers;
-using RollABall.Programming.GamePlay.Interfaces;
+using RollABall.Core.Events;
+using RollABall.Core.Interfaces;
+using RollABall.Domain.Enums;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace RollABall.Programming.GamePlay.Player
+namespace RollABall.Domain.Gameplay.Player
 {
-    // Requiere que el GameObject tenga un componente Rigidbody (física)
     [RequireComponent(typeof(Rigidbody))]
-    public class BallController : MonoBehaviour, IKeyRecovered
-    {    
-        // [Header] crea encabezados organizados en el Inspector de Unity
+    public class BallController : MonoBehaviour, ISceneInitializable, IDisposable
+    {
         [Header("Movement Settings")]
-        [SerializeField] private float moveSpeed = 50f; // Fuerza aplicada al movimiento
+        [SerializeField] private float _moveSpeed = 50f;
 
-        // Referencias y estado interno
-        private Rigidbody _rb;               // Referencia al componente Rigidbody
-        private float     _horizontalInput;  // Input horizontal (teclas A/D o flechas)
-        private float     _verticalInput;    // Input vertical (teclas W/S o flechas)
+        private Rigidbody _rb;
+        private IEventBus _eventBus;
+        private float _horizontalInput;
+        private float _verticalInput;
 
-
-
-        // Awake se ejecuta al cargar el script, ideal para inicializaciones de referencias
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();    // Obtener referencia al Rigidbody adjunto
+            _rb = GetComponent<Rigidbody>();
         }
 
-        // Se ejecuta en intervalos fijos. Ideal para aplicar fuerzas y manipular física.
+        public void Initialize(IEventBus eventBus)
+        {
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _eventBus.Subscribe<GameStateChangedEvent>(HandleGameStateChanged);
+        }
+
         private void FixedUpdate()
         {
-            MoveBall();         // Aplicar movimiento físico
+            MoveBall();
         }
 
-        /// <summary>
-        /// Lee la entrada del jugador en los ejes horizontales y verticales.
-        /// </summary>
         private void OnMove(InputValue movementValue)
         {
             Vector2 movementVector = movementValue.Get<Vector2>();
-
             _horizontalInput = movementVector.x;
             _verticalInput = movementVector.y;
         }
 
-        /// <summary>
-        /// Aplica una fuerza a la bola según la dirección del input.
-        /// </summary>
         private void MoveBall()
         {
-            // Crear vector de dirección con los inputs (Y=0 para movimiento plano)
-            // .normalized asegura que la velocidad sea igual a 1 en diagonales
             Vector3 moveDirection = new Vector3(_horizontalInput, 0f, _verticalInput).normalized;
-            
-            // Solo aplicar fuerza si el jugador está presionando una dirección
+
             if (moveDirection != Vector3.zero)
             {
-                _rb.AddForce(moveDirection * moveSpeed, ForceMode.Force);
+                _rb.AddForce(moveDirection * _moveSpeed, ForceMode.Force);
             }
         }
 
-        public void OnKeyRecovered(int keyValue)
+        private void HandleGameStateChanged(GameStateChangedEvent e)
         {
-            //GameManager.Instance.AddKeys(keyValue);
+            _rb.isKinematic = e.NewState != GameState.Playing;
+        }
+
+        public void Dispose()
+        {
+            _eventBus?.Unsubscribe<GameStateChangedEvent>(HandleGameStateChanged);
+        }
+
+        private void OnDestroy()
+        {
+            Dispose();
         }
     }
 }

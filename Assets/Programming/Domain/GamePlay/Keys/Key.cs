@@ -1,23 +1,26 @@
+using RollABall.Core.Events;
+using System;
 using UnityEngine;
-using RollABall.Programming.GamePlay.Interfaces;
-using RollABall.Programming.Core.Events;
 
-public class Key : MonoBehaviour
+namespace RollABall.Domain.Gameplay.Keys
 {
-    [SerializeField] private float harvestTime = 0.1f;
-    public TrapDoor trapDoor;
-    private const int KeyValue = 1;
-
-
-    private void OnTriggerEnter(Collider other) 
+    public class Key : MonoBehaviour
     {
-        Destroy(gameObject, harvestTime);
+        [SerializeField, Tooltip("Tiempo antes de destruirse al ser recogida")]
+        private float _harvestTime = 0.1f;
 
-        // Pasar evento de llave recuperada por Interface
-        var keyRecovered = other.GetComponent<IKeyRecovered>();
-        keyRecovered?.OnKeyRecovered(KeyValue); // ?. Si es != null
+        private const int KeyValue = 1;
+        private IEventBus _eventBus;
 
-        // Indicar que se recolecto una llave
-        GameEvents.RaiseTrapDoorOpened();
+        public void Initialize(IEventBus eventBus)
+        {
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            _eventBus.Publish(new KeyCollectedEvent(KeyValue));
+            Destroy(gameObject, _harvestTime);
+        }
     }
 }

@@ -1,6 +1,6 @@
-using UnityEngine.UI;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace RollABall.Presentation.UI.MainMenu
 {
@@ -9,27 +9,22 @@ namespace RollABall.Presentation.UI.MainMenu
         [Header("BUTTONS")]
         [SerializeField] private Button _startGameButton;
         public Button StartGameButton => _startGameButton;
-        [SerializeField] private Button _optionsGameButton;
-        public Button OptionsGameButton => _optionsGameButton;
-        
+
         [Header("TEXTS")]
-        [SerializeField] private TextMeshProUGUI _playText;
-        public TextMeshProUGUI PlayText => _playText;
-        [SerializeField] private TextMeshProUGUI _optionsText;
-        public TextMeshProUGUI OptionsText => _optionsText;
+        [SerializeField] private TextMeshProUGUI _playButtonText;
+
+        private const string NewGameText = "Jugar";
+        private const string ContinueText = "Continuar";
 
         private void OnValidate()
         {
-            Debug.Assert(StartGameButton != null, nameof(StartGameButton));
-            Debug.Assert(OptionsGameButton != null, nameof(OptionsGameButton));
-            Debug.Assert(PlayText != null, nameof(PlayText));
-            Debug.Assert(OptionsText != null, nameof(OptionsText));
+            Debug.Assert(_startGameButton != null, nameof(_startGameButton));
+            Debug.Assert(_playButtonText != null, nameof(_playButtonText));
         }
 
-        public void SetTextColor(Color color)
+        public void SetPlayButtonText(bool hasActiveGame)
         {
-            _playText.color = color;
-            _optionsText.color = color;
+            _playButtonText.text = hasActiveGame ? ContinueText : NewGameText;
         }
     }
 }

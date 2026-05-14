@@ -7,19 +7,14 @@ namespace RollABall.Core.Events
     {
         private readonly Dictionary<Type, Delegate> _events = new();
 
-
         public void Subscribe<T>(Action<T> callback) where T : struct
         {
             var type = typeof(T);
 
             if (_events.TryGetValue(type, out var existingDelegate))
-            {
                 _events[type] = Delegate.Combine(existingDelegate, callback);
-            }
             else
-            {
                 _events[type] = callback;
-            }
         }
 
         public void Unsubscribe<T>(Action<T> callback) where T : struct
@@ -47,6 +42,7 @@ namespace RollABall.Core.Events
                 callback?.Invoke(eventData);
             }
         }
+
         public void Clear()
         {
             _events.Clear();

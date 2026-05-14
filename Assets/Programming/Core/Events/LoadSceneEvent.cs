@@ -1,4 +1,3 @@
-
 using RollABall.Domain.Enums;
 
 namespace RollABall.Core.Events

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7798e858efffe8145b1b5314480d7e94, type: 3}
   m_Name: Options Button Style
   m_EditorClassIdentifier: 
-  NormalColor: {r: 0, g: 0.8666667, b: 0.8784314, a: 1}
-  HoverColor: {r: 0.012472863, g: 0.8784314, b: 0, a: 1}
+  NormalColor: {r: 0.16613254, g: 0.67587584, b: 0.70440245, a: 1}
+  HoverColor: {r: 0.7058824, g: 0.16470586, b: 0.30598706, a: 1}
   PressedColor: {r: 0, g: 0, b: 0, a: 1}

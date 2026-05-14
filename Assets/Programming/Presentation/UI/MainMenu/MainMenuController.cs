@@ -6,19 +6,23 @@ namespace RollABall.Presentation.UI.MainMenu
 {
     public class MainMenuController : IDisposable
     {
+        // ─── Estructura interna ───────────────────────────────────────
         private struct HoverActions
         {
             public Action OnEnter;
             public Action OnExit;
         }
 
+        // ─── Campos ───────────────────────────────────────────────────
         private readonly MainMenuView _view;
         private readonly UIHoverableButton[] _hoverableButtons;
         private readonly IEventBus _eventBus;
         private readonly HoverActions[] _hoverActions;
 
+        private bool _hasActiveGame;
+
+        // ─── Constructor ──────────────────────────────────────────────
         public MainMenuController(MainMenuView view, UIHoverableButton[] hoverableButtons, IEventBus eventBus)
-        //                        ↑ ya no recibe UIButtonStyle global
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
             _hoverableButtons = hoverableButtons ?? throw new ArgumentNullException(nameof(hoverableButtons));
@@ -40,30 +44,42 @@ namespace RollABall.Presentation.UI.MainMenu
 
                 button.Hoverable.HoverEntered += _hoverActions[i].OnEnter;
                 button.Hoverable.HoverExited  += _hoverActions[i].OnExit;
-                button.Text.color = button.Style.NormalColor; // ← usa su propio estilo
+                button.Text.color = button.Style.NormalColor;
             }
+
+            _eventBus.Subscribe<GameReadyEvent>(HandleGameReady);
         }
 
-        // ─── Handlers ─────────────────────────────────────────────────────
+        // ─── Handlers ─────────────────────────────────────────────────
+        private void HandleGameReady(GameReadyEvent e)
+        {
+            _hasActiveGame = e.HasActiveGame;
+            _view.SetPlayButtonText(_hasActiveGame);
+        }
+
         private void HandleStartGameButtonClicked()
         {
-            _eventBus.Publish(new StartGameRequestedEvent());
+            if (_hasActiveGame)
+                _eventBus.Publish(new ResumeGameRequestedEvent());
+            else
+                _eventBus.Publish(new StartGameRequestedEvent());
         }
 
         private void OnHoverEntered(UIHoverableButton button)
         {
-            button.Text.color = button.Style.HoverColor;  // ← su propio HoverColor
+            button.Text.color = button.Style.HoverColor;
         }
 
         private void OnHoverExited(UIHoverableButton button)
         {
-            button.Text.color = button.Style.NormalColor; // ← su propio NormalColor
+            button.Text.color = button.Style.NormalColor;
         }
 
-        // ─── Ciclo de vida ────────────────────────────────────────────────
+        // ─── Ciclo de vida ────────────────────────────────────────────
         public void Dispose()
         {
             _view.StartGameButton.onClick.RemoveListener(HandleStartGameButtonClicked);
+            _eventBus.Unsubscribe<GameReadyEvent>(HandleGameReady);
 
             for (int i = 0; i < _hoverableButtons.Length; i++)
             {

@@ -1,5 +1,5 @@
-using UnityEngine;
 using RollABall.Infrastructure.Configuration;
+using UnityEngine;
 
 namespace RollABall.Core.Bootstrap
 {

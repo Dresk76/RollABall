@@ -7,7 +7,6 @@ namespace RollABall.Presentation.UI.Intro
         private int _countdownValue;
         public event Action<int> OnCountdownChanged;
 
-
         public void SetCountdown(int value)
         {
             if (_countdownValue == value) return;

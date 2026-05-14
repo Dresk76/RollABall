@@ -8,11 +8,11 @@ namespace RollABall.Presentation.UI.Buttons
     {
         [SerializeField] private UIHoverable _hoverable;
         [SerializeField] private TextMeshProUGUI _text;
-        [SerializeField] private UIButtonStyle _style; // ← cada botón tiene su propio estilo
+        [SerializeField] private UIButtonStyle _style;
 
         public UIHoverable Hoverable => _hoverable;
         public TextMeshProUGUI Text => _text;
-        public UIButtonStyle Style => _style; // ← expuesto para el Controller
+        public UIButtonStyle Style => _style;
 
         private void OnValidate()
         {

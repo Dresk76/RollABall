@@ -9,7 +9,6 @@ namespace RollABall.Presentation.UI.MainMenu
     {
         [SerializeField] private MainMenuView _view;
         [SerializeField] private UIHoverableButton[] _hoverableButtons;
-        // ↑ ya no hay [SerializeField] private UIButtonStyle _style
 
         private MainMenuController _controller;
 

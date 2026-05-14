@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RollABall.Infrastructure.Configuration
 {
-    [CreateAssetMenu(fileName = "Scene Configuration", menuName = "Scriptable Objects/Scene Configuration")]
+    [CreateAssetMenu(fileName = "Scene Configuration", menuName = "Scriptable Objects/Config/Scene Configuration")]
     public class SceneConfiguration : ScriptableObject
     {
         [Serializable]
@@ -17,7 +17,6 @@ namespace RollABall.Infrastructure.Configuration
 
         [SerializeField] private SceneEntry[] _scenes;
         private Dictionary<SceneType, string> _sceneMap;
-
 
         private void OnEnable()
         {
@@ -34,7 +33,6 @@ namespace RollABall.Infrastructure.Configuration
             }
         }
 
-        // _sceneMap.TryGetValue(SceneType.MainMenu, out string menuName);
         public bool TryGetSceneName(SceneType sceneType, out string sceneName)
         {
             return _sceneMap.TryGetValue(sceneType, out sceneName);

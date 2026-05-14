@@ -1,6 +1,6 @@
-using System;
 using RollABall.Core.Events;
 using RollABall.Domain.Enums;
+using System;
 using UnityEngine;
 
 namespace RollABall.Presentation.UI.Intro
@@ -17,32 +17,14 @@ namespace RollABall.Presentation.UI.Intro
         public IntroController(IntroModel model, IntroView view, IEventBus eventBus, int countdownStartValue)
         {
             _model = model ?? throw new ArgumentNullException(nameof(model));
-            _view = view ?? throw new ArgumentNullException(nameof(view));;
-            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));;
+            _view = view ?? throw new ArgumentNullException(nameof(view));
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+
+            _currentValue = countdownStartValue;
 
             _model.OnCountdownChanged += HandleCountdownChanged;
             _model.SetCountdown(_currentValue);
         }
-
-        // public void Tick()
-        // {
-        //     if (_timer > _currentValue) return;
-
-        //     _timer += Time.deltaTime;
-
-        //     if (_timer >= 1f)
-        //     {
-        //         _timer = 0f;
-        //         _currentValue--;
-
-        //         HandleCountdownChanged(_currentValue);
-
-        //         if (_currentValue <= 0f)
-        //         {
-        //             _eventBus.Publish(new LoadSceneEvent(SceneType.MainMenuScene));
-        //         }
-        //     }
-        // }
 
         public void Tick()
         {
@@ -52,7 +34,7 @@ namespace RollABall.Presentation.UI.Intro
             {
                 _timer = 0f;
                 _currentValue--;
-                _model.SetCountdown(_currentValue); // ← El Model notifica a la View via evento
+                _model.SetCountdown(_currentValue);
 
                 if (_currentValue <= 0)
                 {
@@ -65,7 +47,6 @@ namespace RollABall.Presentation.UI.Intro
         {
             _view.SetCountdownText(value.ToString());
         }
-
 
         public void Dispose()
         {

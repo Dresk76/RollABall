@@ -1,4 +1,3 @@
-
 using RollABall.Core.Events;
 using RollABall.Core.Interfaces;
 using UnityEngine;
@@ -9,9 +8,10 @@ namespace RollABall.Presentation.UI.Intro
     {
         [SerializeField] private IntroView _view;
         [SerializeField] private int _countdownStartValue = 3;
+
         private IntroController _controller;
 
-        void OnValidate()
+        private void OnValidate()
         {
             Debug.Assert(_view != null, nameof(_view));
         }

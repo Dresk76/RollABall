@@ -21,11 +21,9 @@ namespace RollABall.Domain.Models
             OnKeysChanged?.Invoke(_keys);
         }
 
-        public void AddScore(int amount)
+        public void SetScore(int score)
         {
-            if (amount <= 0) return;
-
-            _score += amount;
+            _score = score;
             OnScoreChanged?.Invoke(_score);
         }
 

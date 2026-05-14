@@ -1,33 +1,32 @@
+using RollABall.Core.Events;
+using System;
 using UnityEngine;
-using RollABall.Programming.Core.Events;
 
-public class TrapDoor : MonoBehaviour
+namespace RollABall.Domain.Gameplay.Environment
 {
-    [SerializeField] private int requiredKeys;
-    private int _foundKey;
-
-    private void OnEnable()
+    public class TrapDoor : MonoBehaviour, IDisposable
     {
-        GameEvents.OnTrapDoorOpened += HandleOpenTrapDoor;
-    }
+        private IEventBus _eventBus;
 
-    private void OnDisable()
-    {
-        GameEvents.OnTrapDoorOpened -= HandleOpenTrapDoor;
-    }
-
-    private void HandleOpenTrapDoor()
-    {
-        _foundKey ++;
-
-        if (requiredKeys != _foundKey)
+        public void Initialize(IEventBus eventBus)
         {
-            Debug.Log("Faltan llaves");
-            return;
+            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _eventBus.Subscribe<TrapDoorOpenEvent>(HandleTrapDoorOpen);
         }
 
-        Debug.Log("Puerta abierta!");
-        gameObject.SetActive(false);
-        //changeScene.ChangeScenes();
+        private void HandleTrapDoorOpen(TrapDoorOpenEvent e)
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Dispose()
+        {
+            _eventBus?.Unsubscribe<TrapDoorOpenEvent>(HandleTrapDoorOpen);
+        }
+
+        private void OnDestroy()
+        {
+            Dispose();
+        }
     }
 }

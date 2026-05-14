@@ -1,7 +1,4 @@
 namespace RollABall.Core.Events
 {
-    public readonly struct StartGameRequestedEvent
-    {
-        
-    }
+    public readonly struct StartGameRequestedEvent { }
 }

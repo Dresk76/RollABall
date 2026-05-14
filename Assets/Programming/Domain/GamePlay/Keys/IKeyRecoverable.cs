@@ -1,6 +1,6 @@
 namespace RollABall.Programming.GamePlay.Interfaces
 {
-    public interface IKeyRecovered
+    public interface IKeyRecoverable
     {
         void OnKeyRecovered(int keyValue);
     }
