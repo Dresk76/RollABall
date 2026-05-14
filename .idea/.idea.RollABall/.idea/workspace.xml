@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1ac004a4-f300-42fb-8fac-1e554aa4fa7f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.RollABall/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RollABall/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/01_main_menu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/01_main_menu.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
-    </list>
+    <list default="true" id="1ac004a4-f300-42fb-8fac-1e554aa4fa7f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -97,6 +93,7 @@
       <workItem from="1769737089050" duration="717000" />
       <workItem from="1769807401800" duration="2476000" />
       <workItem from="1773453739690" duration="7000" />
+      <workItem from="1778187438156" duration="1000" />
     </task>
     <servers />
   </component>

@@ -1,6 +1,6 @@
 using System;
 
-namespace RollABall.Programming.Core.Events
+namespace RollABall.Core.Events
 {
     public interface IEventBus
     {

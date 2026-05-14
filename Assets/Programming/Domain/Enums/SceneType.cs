@@ -1,4 +1,4 @@
-namespace RollABall.Programming.Data.Enums
+namespace RollABall.Domain.Enums
 {
     public enum SceneType
     {

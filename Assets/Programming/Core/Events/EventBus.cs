@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RollABall.Programming.Core.Events
+namespace RollABall.Core.Events
 {
     public sealed class EventBus : IEventBus
     {

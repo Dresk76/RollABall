@@ -1,8 +1,8 @@
-using RollABall.Programming.Data.Enums;
+using RollABall.Domain.Enums;
 
-namespace RollABall.Programming.Core.Events
+namespace RollABall.Core.Events
 {
-    public struct GameStateChangedEvent
+    public readonly struct GameStateChangedEvent
     {
         public readonly GameState NewState;
 

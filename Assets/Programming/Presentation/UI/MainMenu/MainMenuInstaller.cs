@@ -1,18 +1,17 @@
-using RollABall.Programming.Core.Events;
-using RollABall.Programming.Core.Interfaces;
-using RollABall.Programming.UI.Buttons;
+using RollABall.Core.Events;
+using RollABall.Core.Interfaces;
+using RollABall.Presentation.UI.Buttons;
 using UnityEngine;
 
-namespace RollABall.Programming.UI.MainMenu
+namespace RollABall.Presentation.UI.MainMenu
 {
     public sealed class MainMenuInstaller : MonoBehaviour, ISceneInitializable
     {
         [SerializeField] private MainMenuView _view;
-        [SerializeField] private UIHoverable[] _hoverables;
-        [SerializeField] private UIButtonStyle _style;
+        [SerializeField] private UIHoverableButton[] _hoverableButtons;
+        // ↑ ya no hay [SerializeField] private UIButtonStyle _style
 
         private MainMenuController _controller;
-
 
         private void OnValidate()
         {
@@ -21,7 +20,7 @@ namespace RollABall.Programming.UI.MainMenu
 
         public void Initialize(IEventBus eventBus)
         {
-            _controller = new MainMenuController(_view, _hoverables, _style, eventBus);
+            _controller = new MainMenuController(_view, _hoverableButtons, eventBus);
         }
 
         private void OnDestroy()

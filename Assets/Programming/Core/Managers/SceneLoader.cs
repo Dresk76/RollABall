@@ -1,12 +1,12 @@
-using RollABall.Programming.Core.Events;
-using RollABall.Programming.Core.Interfaces;
-using RollABall.Programming.Data.Enums;
-using RollABall.Programming.Data.ScriptableObjects;
+
+using RollABall.Core.Interfaces;
+using RollABall.Core.Events;
+using RollABall.Infrastructure.Configuration;
 using UnityEngine.SceneManagement;
 using System;
 using UnityEngine;
 
-namespace RollABall.Programming.Core.Managers
+namespace RollABall.Core.Managers
 {
     public sealed class SceneLoader : MonoBehaviour, IGlobalInitializable, IDisposable
     {

@@ -1,69 +1,75 @@
-using RollABall.Programming.Core.Events;
-using RollABall.Programming.UI.Buttons;
+using RollABall.Core.Events;
+using RollABall.Presentation.UI.Buttons;
 using System;
 
-
-// TRTATAR DE IMPLEMENTAR LA INTERFACE IInitializable
-namespace RollABall.Programming.UI.MainMenu
+namespace RollABall.Presentation.UI.MainMenu
 {
     public class MainMenuController : IDisposable
     {
-        private readonly MainMenuView _view;
-        private readonly UIHoverable[] _hoverables;
-        private readonly UIButtonStyle _style;
-        private readonly IEventBus _eventBus;
+        private struct HoverActions
+        {
+            public Action OnEnter;
+            public Action OnExit;
+        }
 
-        public MainMenuController(MainMenuView view, UIHoverable[] hoverables, UIButtonStyle style, IEventBus eventBus)
+        private readonly MainMenuView _view;
+        private readonly UIHoverableButton[] _hoverableButtons;
+        private readonly IEventBus _eventBus;
+        private readonly HoverActions[] _hoverActions;
+
+        public MainMenuController(MainMenuView view, UIHoverableButton[] hoverableButtons, IEventBus eventBus)
+        //                        ↑ ya no recibe UIButtonStyle global
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
-            _hoverables = hoverables ?? throw new ArgumentNullException(nameof(hoverables));
-            _style = style ?? throw new ArgumentNullException(nameof(style));
+            _hoverableButtons = hoverableButtons ?? throw new ArgumentNullException(nameof(hoverableButtons));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
             _view.StartGameButton.onClick.AddListener(HandleStartGameButtonClicked);
 
-            foreach (UIHoverable hoverable in _hoverables)
-            {
-                hoverable.HoverEntered += OnHoverEntered;
-            }
+            _hoverActions = new HoverActions[_hoverableButtons.Length];
 
-            _view.SetTextColor(_style.NormalColor);
+            for (int i = 0; i < _hoverableButtons.Length; i++)
+            {
+                UIHoverableButton button = _hoverableButtons[i];
+
+                _hoverActions[i] = new HoverActions
+                {
+                    OnEnter = () => OnHoverEntered(button),
+                    OnExit  = () => OnHoverExited(button)
+                };
+
+                button.Hoverable.HoverEntered += _hoverActions[i].OnEnter;
+                button.Hoverable.HoverExited  += _hoverActions[i].OnExit;
+                button.Text.color = button.Style.NormalColor; // ← usa su propio estilo
+            }
         }
 
+        // ─── Handlers ─────────────────────────────────────────────────────
         private void HandleStartGameButtonClicked()
         {
             _eventBus.Publish(new StartGameRequestedEvent());
         }
 
-        private void OnHoverEntered()
+        private void OnHoverEntered(UIHoverableButton button)
         {
-            _view.SetTextColor(_style.HoverColor);
+            button.Text.color = button.Style.HoverColor;  // ← su propio HoverColor
         }
 
+        private void OnHoverExited(UIHoverableButton button)
+        {
+            button.Text.color = button.Style.NormalColor; // ← su propio NormalColor
+        }
+
+        // ─── Ciclo de vida ────────────────────────────────────────────────
         public void Dispose()
         {
             _view.StartGameButton.onClick.RemoveListener(HandleStartGameButtonClicked);
-            foreach (UIHoverable hoverable in _hoverables)
+
+            for (int i = 0; i < _hoverableButtons.Length; i++)
             {
-                hoverable.HoverEntered -= OnHoverEntered;
+                _hoverableButtons[i].Hoverable.HoverEntered -= _hoverActions[i].OnEnter;
+                _hoverableButtons[i].Hoverable.HoverExited  -= _hoverActions[i].OnExit;
             }
         }
     }
 }
-
-/// <summary>
-/// ?? significa:
-/// 
-/// 👉 “Si lo de la izquierda existe, úsalo.
-/// 👉 Si no existe (es null), usa lo de la derecha.”
-/// 
-/// Ejemplo simple:
-/// 
-/// string name = userName ?? "Invitado";
-/// 
-/// Eso significa:
-///
-/// Si userName tiene valor → usa ese valor.
-/// 
-/// Si es null → usa "Invitado".
-/// </summary>

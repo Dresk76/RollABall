@@ -1,12 +1,14 @@
-using RollABall.Programming.Core.Events;
-using RollABall.Programming.Core.Interfaces;
+
+using RollABall.Core.Events;
+using RollABall.Core.Interfaces;
 using UnityEngine;
 
-namespace RollABall.Programming.UI.Intro
+namespace RollABall.Presentation.UI.Intro
 {
     public class IntroInstaller : MonoBehaviour, ISceneInitializable
     {
         [SerializeField] private IntroView _view;
+        [SerializeField] private int _countdownStartValue = 3;
         private IntroController _controller;
 
         void OnValidate()
@@ -17,7 +19,7 @@ namespace RollABall.Programming.UI.Intro
         public void Initialize(IEventBus eventBus)
         {
             IntroModel model = new();
-            _controller = new IntroController(model, _view, eventBus);
+            _controller = new IntroController(model, _view, eventBus, _countdownStartValue);
         }
 
         private void Update()

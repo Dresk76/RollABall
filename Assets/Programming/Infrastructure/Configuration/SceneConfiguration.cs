@@ -1,9 +1,9 @@
-using RollABall.Programming.Data.Enums;
+using RollABall.Domain.Enums;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-namespace RollABall.Programming.Data.ScriptableObjects
+namespace RollABall.Infrastructure.Configuration
 {
     [CreateAssetMenu(fileName = "Scene Configuration", menuName = "Scriptable Objects/Scene Configuration")]
     public class SceneConfiguration : ScriptableObject

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace RollABall.Programming.UI.Buttons
+namespace RollABall.Presentation.UI.Buttons
 {
     public class UIHoverable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {

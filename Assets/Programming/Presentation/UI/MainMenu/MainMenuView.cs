@@ -2,7 +2,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
-namespace RollABall.Programming.UI.MainMenu
+namespace RollABall.Presentation.UI.MainMenu
 {
     public class MainMenuView : MonoBehaviour
     {

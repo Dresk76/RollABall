@@ -1,9 +1,9 @@
-using RollABall.Programming.Core.Events;
-using RollABall.Programming.Core.Interfaces;
+using RollABall.Core.Events;
+using RollABall.Core.Interfaces;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RollABall.Programming.Core.Bootstrap
+namespace RollABall.Core.Bootstrap
 {
     public sealed class Bootstrapper : MonoBehaviour
     {

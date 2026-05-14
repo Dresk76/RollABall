@@ -1,6 +1,6 @@
-using RollABall.Programming.Core.Events;
+using RollABall.Core.Events;
 
-namespace RollABall.Programming.Core.Interfaces
+namespace RollABall.Core.Interfaces
 {
     public interface IGlobalInitializable
     {

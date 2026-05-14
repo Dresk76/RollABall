@@ -1,6 +1,6 @@
 using System;
 
-namespace RollABall.Programming.UI.Intro
+namespace RollABall.Presentation.UI.Intro
 {
     public class IntroModel
     {

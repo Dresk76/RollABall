@@ -1,9 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Application Settings", menuName = "Scriptable Objects/Config/Application Settings")]
-public class ApplicationSettings : ScriptableObject
+namespace RollABall.Infrastructure.Configuration
 {
-    public int targetFrameRate = 60;
+    [CreateAssetMenu(fileName = "Application Settings", menuName = "Scriptable Objects/Config/Application Settings")]
+    public class ApplicationSettings : ScriptableObject
+    {
+        [SerializeField, Tooltip("Fotogramas por segundo objetivo")]
+        private int _targetFrameRate = 60;
+
+        public int TargetFrameRate => _targetFrameRate;
+    }
 }

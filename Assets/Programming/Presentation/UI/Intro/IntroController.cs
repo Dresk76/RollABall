@@ -1,9 +1,9 @@
 using System;
-using RollABall.Programming.Core.Events;
-using RollABall.Programming.Data.Enums;
+using RollABall.Core.Events;
+using RollABall.Domain.Enums;
 using UnityEngine;
 
-namespace RollABall.Programming.UI.Intro
+namespace RollABall.Presentation.UI.Intro
 {
     public class IntroController : IDisposable
     {
@@ -12,9 +12,9 @@ namespace RollABall.Programming.UI.Intro
         private readonly IEventBus _eventBus;
 
         private float _timer;
-        private int _currentValue = 3;
+        private int _currentValue;
 
-        public IntroController(IntroModel model, IntroView view, IEventBus eventBus)
+        public IntroController(IntroModel model, IntroView view, IEventBus eventBus, int countdownStartValue)
         {
             _model = model ?? throw new ArgumentNullException(nameof(model));
             _view = view ?? throw new ArgumentNullException(nameof(view));;
@@ -24,20 +24,37 @@ namespace RollABall.Programming.UI.Intro
             _model.SetCountdown(_currentValue);
         }
 
+        // public void Tick()
+        // {
+        //     if (_timer > _currentValue) return;
+
+        //     _timer += Time.deltaTime;
+
+        //     if (_timer >= 1f)
+        //     {
+        //         _timer = 0f;
+        //         _currentValue--;
+
+        //         HandleCountdownChanged(_currentValue);
+
+        //         if (_currentValue <= 0f)
+        //         {
+        //             _eventBus.Publish(new LoadSceneEvent(SceneType.MainMenuScene));
+        //         }
+        //     }
+        // }
+
         public void Tick()
         {
-            if (_timer > _currentValue) return;
-
             _timer += Time.deltaTime;
 
             if (_timer >= 1f)
             {
                 _timer = 0f;
                 _currentValue--;
+                _model.SetCountdown(_currentValue); // ← El Model notifica a la View via evento
 
-                HandleCountdownChanged(_currentValue);
-
-                if (_currentValue <= 0f)
+                if (_currentValue <= 0)
                 {
                     _eventBus.Publish(new LoadSceneEvent(SceneType.MainMenuScene));
                 }
