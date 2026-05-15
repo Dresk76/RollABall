@@ -45,6 +45,7 @@ namespace RollABall.Core.Managers
             _eventBus.Subscribe<LevelCompletedEvent>(HandleLevelCompleted);
             _eventBus.Subscribe<LoadSceneEvent>(HandleLoadScene);
             _eventBus.Subscribe<LevelLoadedEvent>(HandleLevelLoaded);
+            _eventBus.Subscribe<QuitGameRequestedEvent>(HandleQuitGameRequested);
         }
 
         // ─── Handlers ─────────────────────────────────────────────────
@@ -112,6 +113,15 @@ namespace RollABall.Core.Managers
             }
         }
 
+        private void HandleQuitGameRequested(QuitGameRequestedEvent e)
+        {
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
+        }
+
         // ─── API pública ──────────────────────────────────────────────
         public GameModel GetModel() => _gameModel;
 
@@ -132,6 +142,7 @@ namespace RollABall.Core.Managers
             _eventBus?.Unsubscribe<LevelCompletedEvent>(HandleLevelCompleted);
             _eventBus?.Unsubscribe<LoadSceneEvent>(HandleLoadScene);
             _eventBus?.Unsubscribe<LevelLoadedEvent>(HandleLevelLoaded);
+            _eventBus?.Unsubscribe<QuitGameRequestedEvent>(HandleQuitGameRequested);
         }
 
         private void OnDestroy()

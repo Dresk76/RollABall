@@ -10,21 +10,28 @@ namespace RollABall.Core.Bootstrap
 {
     public class LevelInstaller : MonoBehaviour, ISceneInitializable
     {
+        // ─── Campos ───────────────────────────────────────────────────
         [SerializeField] private Key[] _keys;
         [SerializeField] private TrapDoor _trapDoor;
+        [SerializeField] private AreaReloadCurrentScene _areaReload;
+        [SerializeField] private AreaVictory _areaVictory;
 
         [SerializeField, Tooltip("Configuración única de este nivel")]
         private LevelConfiguration _levelConfiguration;
 
         private LevelController _levelController;
 
+        // ─── Validación ───────────────────────────────────────────────
         private void OnValidate()
         {
             Debug.Assert(_keys != null, nameof(_keys));
             Debug.Assert(_trapDoor != null, nameof(_trapDoor));
+            Debug.Assert(_areaReload != null, nameof(_areaReload));
+            Debug.Assert(_areaVictory != null, nameof(_areaVictory));
             Debug.Assert(_levelConfiguration != null, nameof(_levelConfiguration));
         }
 
+        // ─── Inicialización ───────────────────────────────────────────
         public void Initialize(IEventBus eventBus)
         {
             eventBus.Publish(new LevelLoadedEvent(
@@ -38,10 +45,13 @@ namespace RollABall.Core.Bootstrap
             }
 
             _trapDoor.Initialize(eventBus);
+            _areaReload.Initialize(eventBus);
+            _areaVictory.Initialize(eventBus);
 
-            _levelController = new LevelController(eventBus, _levelConfiguration.MaxScore);
+            _levelController = new LevelController(eventBus, _levelConfiguration.MaxScore, _areaVictory);
         }
 
+        // ─── Ciclo de vida ────────────────────────────────────────────
         private void Update()
         {
             _levelController?.Tick(Time.deltaTime);

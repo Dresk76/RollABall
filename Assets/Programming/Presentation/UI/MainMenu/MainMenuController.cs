@@ -28,8 +28,11 @@ namespace RollABall.Presentation.UI.MainMenu
             _hoverableButtons = hoverableButtons ?? throw new ArgumentNullException(nameof(hoverableButtons));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
+            // Botones
             _view.StartGameButton.onClick.AddListener(HandleStartGameButtonClicked);
+            _view.QuitGameButton.onClick.AddListener(HandleQuitGameButtonClicked);
 
+            // Hovers
             _hoverActions = new HoverActions[_hoverableButtons.Length];
 
             for (int i = 0; i < _hoverableButtons.Length; i++)
@@ -65,6 +68,11 @@ namespace RollABall.Presentation.UI.MainMenu
                 _eventBus.Publish(new StartGameRequestedEvent());
         }
 
+        private void HandleQuitGameButtonClicked()
+        {
+            _eventBus.Publish(new QuitGameRequestedEvent());
+        }
+
         private void OnHoverEntered(UIHoverableButton button)
         {
             button.Text.color = button.Style.HoverColor;
@@ -79,6 +87,7 @@ namespace RollABall.Presentation.UI.MainMenu
         public void Dispose()
         {
             _view.StartGameButton.onClick.RemoveListener(HandleStartGameButtonClicked);
+            _view.QuitGameButton.onClick.RemoveListener(HandleQuitGameButtonClicked);
             _eventBus.Unsubscribe<GameReadyEvent>(HandleGameReady);
 
             for (int i = 0; i < _hoverableButtons.Length; i++)

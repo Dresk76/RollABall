@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7726f53d73c674f9352db202de3d10, type: 3}
-  m_Name: Scene Configuration
+  m_Script: {fileID: 11500000, guid: 7085e5da915cbd74091193d426017b96, type: 3}
+  m_Name: UI Main Menu Texts
   m_EditorClassIdentifier: 
-  _scenes:
-  - SceneType: 0
-    SceneName: 00_intro
-  - SceneType: 1
-    SceneName: 01_main_menu
-  - SceneType: 2
-    SceneName: 02_introduction_level
+  _newGameText: PLAY
+  _continueText: CONTINUE
+  _optionsText: OPTIONS
+  _quitText: QUIT

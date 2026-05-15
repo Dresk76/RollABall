@@ -1,4 +1,5 @@
 using RollABall.Core.Events;
+using RollABall.Domain.Gameplay.Environment;
 using System;
 using UnityEngine;
 
@@ -6,25 +7,23 @@ namespace RollABall.Domain.Gameplay.Level
 {
     public class LevelController : IDisposable
     {
-        // ─── Campos ───────────────────────────────────────────────────
         private readonly IEventBus _eventBus;
         private readonly int _maxScore;
+        private readonly AreaVictory _areaVictory; // ← referencia al área
 
         private float _elapsedTime;
         private bool _isRunning;
 
-        // ─── Constructor ──────────────────────────────────────────────
-        public LevelController(IEventBus eventBus, int maxScore)
+        public LevelController(IEventBus eventBus, int maxScore, AreaVictory areaVictory)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _maxScore = maxScore;
+            _areaVictory = areaVictory ?? throw new ArgumentNullException(nameof(areaVictory));
 
             _eventBus.Subscribe<TrapDoorOpenEvent>(HandleTrapDoorOpen);
-
             _isRunning = true;
         }
 
-        // ─── Tick ─────────────────────────────────────────────────────
         public void Tick(float deltaTime)
         {
             if (!_isRunning) return;
@@ -33,23 +32,20 @@ namespace RollABall.Domain.Gameplay.Level
             _eventBus.Publish(new TimerUpdatedEvent(_elapsedTime));
         }
 
-        // ─── Handlers ─────────────────────────────────────────────────
         private void HandleTrapDoorOpen(TrapDoorOpenEvent e)
         {
             _isRunning = false;
 
             int finalScore = CalculateScore(_elapsedTime, _maxScore);
-            _eventBus.Publish(new LevelCompletedEvent(finalScore));
+            _areaVictory.SetFinalScore(finalScore); // ← le pasa el score al área
         }
 
-        // ─── Helpers privados ─────────────────────────────────────────
         private int CalculateScore(float time, int maxScore)
         {
             int score = maxScore - Mathf.RoundToInt(time * 10f);
             return Mathf.Max(score, 0);
         }
 
-        // ─── Ciclo de vida ────────────────────────────────────────────
         public void Dispose()
         {
             _eventBus?.Unsubscribe<TrapDoorOpenEvent>(HandleTrapDoorOpen);

@@ -1,20 +1,23 @@
-
-using RollABall.Core.Interfaces;
 using RollABall.Core.Events;
+using RollABall.Core.Interfaces;
 using RollABall.Infrastructure.Configuration;
-using UnityEngine.SceneManagement;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RollABall.Core.Managers
 {
     public sealed class SceneLoader : MonoBehaviour, IGlobalInitializable, IDisposable
     {
+        // ─── Singleton ────────────────────────────────────────────────
         private static SceneLoader _instance;
+
+        // ─── Campos ───────────────────────────────────────────────────
         private IEventBus _eventBus;
+
         [SerializeField] private SceneConfiguration _sceneConfiguration;
 
-
+        // ─── Ciclo de vida Unity ──────────────────────────────────────
         private void Awake()
         {
             if (_instance != null)
@@ -27,23 +30,32 @@ namespace RollABall.Core.Managers
             DontDestroyOnLoad(gameObject);
         }
 
+        // ─── Inicialización ───────────────────────────────────────────
         public void Initialize(IEventBus eventBus)
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _eventBus.Subscribe<LoadSceneEvent>(HandleLoadSceneRequested);
+            _eventBus.Subscribe<LevelRestartRequestedEvent>(HandleLevelRestartRequested);
         }
 
+        // ─── Handlers ─────────────────────────────────────────────────
         private void HandleLoadSceneRequested(LoadSceneEvent e)
         {
             if (!_sceneConfiguration.TryGetSceneName(e.SceneToLoad, out string sceneName))
             {
-                Debug.LogError($"No se ha encontrado el mapeo de escena para {e.SceneToLoad}");
+                Debug.LogError($"No se encontró el mapeo de escena para {e.SceneToLoad}");
                 return;
             }
 
             LoadScene(sceneName);
         }
 
+        private void HandleLevelRestartRequested(LevelRestartRequestedEvent e)
+        {
+            ReloadCurrentScene();
+        }
+
+        // ─── API pública ──────────────────────────────────────────────
         public void LoadScene(string sceneName)
         {
             SceneManager.LoadScene(sceneName);
@@ -54,9 +66,12 @@ namespace RollABall.Core.Managers
             Scene currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.name);
         }
+
+        // ─── Ciclo de vida ────────────────────────────────────────────
         public void Dispose()
         {
             _eventBus?.Unsubscribe<LoadSceneEvent>(HandleLoadSceneRequested);
+            _eventBus?.Unsubscribe<LevelRestartRequestedEvent>(HandleLevelRestartRequested);
         }
 
         private void OnDestroy()
@@ -65,76 +80,3 @@ namespace RollABall.Core.Managers
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// using RollABall.Core.Events;
-// using RollABall.Core.Interfaces;
-// using RollABall.Infrastructure.Configuration;
-// using RollABall.Domain.Enums;
-// using System;
-// using UnityEngine;
-// using UnityEngine.SceneManagement;
-
-// namespace RollABall.Core.Managers
-// {
-//     public sealed class SceneLoader : MonoBehaviour, IGlobalInitializable, IDisposable
-//     {
-//         private static SceneLoader _instance;
-//         private IEventBus _eventBus;
-
-//         [SerializeField] private SceneConfiguration _sceneConfiguration;
-
-//         private void Awake()
-//         {
-//             if (_instance != null)
-//             {
-//                 Destroy(gameObject);
-//                 return;
-//             }
-
-//             _instance = this;
-//             DontDestroyOnLoad(gameObject);
-//         }
-
-//         public void Initialize(IEventBus eventBus)
-//         {
-//             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-//             _eventBus.Subscribe<LoadSceneEvent>(HandleLoadSceneRequested);
-//         }
-
-//         private void HandleLoadSceneRequested(LoadSceneEvent e)
-//         {
-//             if (!_sceneConfiguration.TryGetSceneName(e.SceneToLoad, out string sceneName))
-//             {
-//                 Debug.LogError($"No se encontró el mapeo de escena para {e.SceneToLoad}");
-//                 return;
-//             }
-
-//             SceneManager.LoadScene(sceneName);
-//         }
-
-//         public void Dispose()
-//         {
-//             _eventBus?.Unsubscribe<LoadSceneEvent>(HandleLoadSceneRequested);
-//         }
-
-//         private void OnDestroy()
-//         {
-//             Dispose();
-//         }
-//     }
-// }
