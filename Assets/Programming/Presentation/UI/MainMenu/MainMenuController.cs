@@ -1,54 +1,32 @@
 using RollABall.Core.Events;
 using RollABall.Presentation.UI.Buttons;
+using RollABall.Presentation.UI.Common;
 using System;
 
 namespace RollABall.Presentation.UI.MainMenu
 {
     public class MainMenuController : IDisposable
     {
-        // ─── Estructura interna ───────────────────────────────────────
-        private struct HoverActions
-        {
-            public Action OnEnter;
-            public Action OnExit;
-        }
-
         // ─── Campos ───────────────────────────────────────────────────
         private readonly MainMenuView _view;
-        private readonly UIHoverableButton[] _hoverableButtons;
         private readonly IEventBus _eventBus;
-        private readonly HoverActions[] _hoverActions;
+        private readonly UIHoverHandler _hoverHandler;
 
         private bool _hasActiveGame;
 
         // ─── Constructor ──────────────────────────────────────────────
         public MainMenuController(MainMenuView view, UIHoverableButton[] hoverableButtons, IEventBus eventBus)
         {
-            _view = view ?? throw new ArgumentNullException(nameof(view));
-            _hoverableButtons = hoverableButtons ?? throw new ArgumentNullException(nameof(hoverableButtons));
+            _view     = view ?? throw new ArgumentNullException(nameof(view));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
-            // Botones
-            _view.StartGameButton.onClick.AddListener(HandleStartGameButtonClicked);
-            _view.QuitGameButton.onClick.AddListener(HandleQuitGameButtonClicked);
+            _hoverHandler = new UIHoverHandler(hoverableButtons);
 
-            // Hovers
-            _hoverActions = new HoverActions[_hoverableButtons.Length];
-
-            for (int i = 0; i < _hoverableButtons.Length; i++)
-            {
-                UIHoverableButton button = _hoverableButtons[i];
-
-                _hoverActions[i] = new HoverActions
-                {
-                    OnEnter = () => OnHoverEntered(button),
-                    OnExit  = () => OnHoverExited(button)
-                };
-
-                button.Hoverable.HoverEntered += _hoverActions[i].OnEnter;
-                button.Hoverable.HoverExited  += _hoverActions[i].OnExit;
-                button.Text.color = button.Style.NormalColor;
-            }
+            _view.PlayButton.onClick.AddListener(HandlePlayButtonClicked);
+            _view.OptionsButton.onClick.AddListener(HandleOptionsButtonClicked);
+            _view.NewGameButton.onClick.AddListener(HandleNewGameButtonClicked);
+            _view.LoadGameButton.onClick.AddListener(HandleLoadGameButtonClicked);
+            _view.QuitButton.onClick.AddListener(HandleQuitButtonClicked);
 
             _eventBus.Subscribe<GameReadyEvent>(HandleGameReady);
         }
@@ -60,7 +38,7 @@ namespace RollABall.Presentation.UI.MainMenu
             _view.SetPlayButtonText(_hasActiveGame);
         }
 
-        private void HandleStartGameButtonClicked()
+        private void HandlePlayButtonClicked()
         {
             if (_hasActiveGame)
                 _eventBus.Publish(new ResumeGameRequestedEvent());
@@ -68,33 +46,36 @@ namespace RollABall.Presentation.UI.MainMenu
                 _eventBus.Publish(new StartGameRequestedEvent());
         }
 
-        private void HandleQuitGameButtonClicked()
+        private void HandleOptionsButtonClicked()
+        {
+            _eventBus.Publish(new OpenOptionsRequestedEvent());
+        }
+
+        private void HandleNewGameButtonClicked()
+        {
+            _eventBus.Publish(new NewGameRequestedEvent());
+        }
+
+        private void HandleLoadGameButtonClicked()
+        {
+            _eventBus.Publish(new OpenLoadGameRequestedEvent());
+        }
+
+        private void HandleQuitButtonClicked()
         {
             _eventBus.Publish(new QuitGameRequestedEvent());
-        }
-
-        private void OnHoverEntered(UIHoverableButton button)
-        {
-            button.Text.color = button.Style.HoverColor;
-        }
-
-        private void OnHoverExited(UIHoverableButton button)
-        {
-            button.Text.color = button.Style.NormalColor;
         }
 
         // ─── Ciclo de vida ────────────────────────────────────────────
         public void Dispose()
         {
-            _view.StartGameButton.onClick.RemoveListener(HandleStartGameButtonClicked);
-            _view.QuitGameButton.onClick.RemoveListener(HandleQuitGameButtonClicked);
+            _view.PlayButton.onClick.RemoveListener(HandlePlayButtonClicked);
+            _view.OptionsButton.onClick.RemoveListener(HandleOptionsButtonClicked);
+            _view.NewGameButton.onClick.RemoveListener(HandleNewGameButtonClicked);
+            _view.LoadGameButton.onClick.RemoveListener(HandleLoadGameButtonClicked);
+            _view.QuitButton.onClick.RemoveListener(HandleQuitButtonClicked);
             _eventBus.Unsubscribe<GameReadyEvent>(HandleGameReady);
-
-            for (int i = 0; i < _hoverableButtons.Length; i++)
-            {
-                _hoverableButtons[i].Hoverable.HoverEntered -= _hoverActions[i].OnEnter;
-                _hoverableButtons[i].Hoverable.HoverExited  -= _hoverActions[i].OnExit;
-            }
+            _hoverHandler.Dispose();
         }
     }
 }

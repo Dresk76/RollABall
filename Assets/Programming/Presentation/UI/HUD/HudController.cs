@@ -1,77 +1,78 @@
 using RollABall.Core.Events;
-using RollABall.Core.Interfaces;
-using RollABall.Domain.Enums;
-using RollABall.Infrastructure.Configuration;
 using System;
-using TMPro;
-using UnityEngine;
 
 namespace RollABall.Presentation.UI.HUD
 {
-    public class HudController : MonoBehaviour, ISceneInitializable, IDisposable
+    public class HudController : IDisposable
     {
-        [Header("TEXTS")]
-        [SerializeField] private TextMeshProUGUI _keysText;
-        [SerializeField] private TextMeshProUGUI _scoreText;
-        [SerializeField] private TextMeshProUGUI _timerText;
+        private readonly HudModel _model;
+        private readonly HudView _view;
+        private readonly IEventBus _eventBus;
 
-        [Header("CONFIGURATION")]
-        [SerializeField] private UIHudTexts _texts;
-
-        private IEventBus _eventBus;
-
-        private void OnValidate()
+        public HudController(HudModel model, HudView view, IEventBus eventBus)
         {
-            Debug.Assert(_keysText != null, nameof(_keysText));
-            Debug.Assert(_scoreText != null, nameof(_scoreText));
-            Debug.Assert(_timerText != null, nameof(_timerText));
-            Debug.Assert(_texts != null, nameof(_texts));
-        }
-
-        public void Initialize(IEventBus eventBus)
-        {
+            _model    = model ?? throw new ArgumentNullException(nameof(model));
+            _view     = view ?? throw new ArgumentNullException(nameof(view));
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
-            _eventBus.Subscribe<GameStateChangedEvent>(HandleGameStateChanged);
+            _model.OnKeysChanged  += HandleKeysChanged;
+            _model.OnTimerChanged += HandleTimerChanged;
+            _model.OnScoreChanged += HandleScoreChanged;
+
             _eventBus.Subscribe<KeyCollectedEvent>(HandleKeyCollected);
             _eventBus.Subscribe<LevelCompletedEvent>(HandleLevelCompleted);
             _eventBus.Subscribe<TimerUpdatedEvent>(HandleTimerUpdated);
+            _eventBus.Subscribe<LevelLoadedEvent>(HandleLevelLoaded);
         }
 
-        // ─── Handlers ─────────────────────────────────────────────────
-        private void HandleGameStateChanged(GameStateChangedEvent e)
-        {
-            gameObject.SetActive(e.NewState == GameState.Playing);
-        }
-
+        // ─── Handlers EventBus ────────────────────────────────────────
         private void HandleKeyCollected(KeyCollectedEvent e)
         {
-            _keysText.text = $"{_texts.KeysPrefix}{e.KeyValue}";
+            _model.SetKeys(e.KeyValue);
         }
 
         private void HandleLevelCompleted(LevelCompletedEvent e)
         {
-            _scoreText.text = $"{_texts.ScorePrefix}{e.FinalScore}";
+            _model.SetScore(e.FinalScore);
         }
 
         private void HandleTimerUpdated(TimerUpdatedEvent e)
         {
-            TimeSpan time = TimeSpan.FromSeconds(e.ElapsedSeconds);
-            _timerText.text = $"{_texts.TimerPrefix}{time.Minutes:00}:{time.Seconds:00}";
+            _model.SetTimer(e.ElapsedSeconds);
+        }
+
+        private void HandleLevelLoaded(LevelLoadedEvent e)
+        {
+            _model.Reset();
+        }
+
+        // ─── Handlers Model ───────────────────────────────────────────
+        private void HandleKeysChanged(int keys)
+        {
+            _view.SetKeys(keys);
+        }
+
+        private void HandleTimerChanged(float elapsedSeconds)
+        {
+            _view.SetTimer(elapsedSeconds);
+        }
+
+        private void HandleScoreChanged(int score)
+        {
+            _view.SetScore(score);
         }
 
         // ─── Ciclo de vida ────────────────────────────────────────────
         public void Dispose()
         {
-            _eventBus?.Unsubscribe<GameStateChangedEvent>(HandleGameStateChanged);
+            _model.OnKeysChanged  -= HandleKeysChanged;
+            _model.OnTimerChanged -= HandleTimerChanged;
+            _model.OnScoreChanged -= HandleScoreChanged;
+
             _eventBus?.Unsubscribe<KeyCollectedEvent>(HandleKeyCollected);
             _eventBus?.Unsubscribe<LevelCompletedEvent>(HandleLevelCompleted);
             _eventBus?.Unsubscribe<TimerUpdatedEvent>(HandleTimerUpdated);
-        }
-
-        private void OnDestroy()
-        {
-            Dispose();
+            _eventBus?.Unsubscribe<LevelLoadedEvent>(HandleLevelLoaded);
         }
     }
 }

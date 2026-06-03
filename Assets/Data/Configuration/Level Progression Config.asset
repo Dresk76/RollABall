@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c4ded19e377a9438440a5e32e89d60, type: 3}
+  m_Name: Level Progression Config
+  m_EditorClassIdentifier: 
+  _levels:
+  - LevelIndex: 0
+    LevelName: Introduction
+    SceneType: 3
+    LevelSprite: {fileID: 21300000, guid: 35478c23800c14248ba18b78f4f3617e, type: 3}
+  - LevelIndex: 1
+    LevelName: Level 1
+    SceneType: 4
+    LevelSprite: {fileID: 21300000, guid: 4491cc310779aca4ca9cbc898012193a, type: 3}
+  - LevelIndex: 2
+    LevelName: Level 2
+    SceneType: 5
+    LevelSprite: {fileID: 21300000, guid: 4491cc310779aca4ca9cbc898012193a, type: 3}
+  - LevelIndex: 3
+    LevelName: Level 3
+    SceneType: 6
+    LevelSprite: {fileID: 21300000, guid: 4491cc310779aca4ca9cbc898012193a, type: 3}

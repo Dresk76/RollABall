@@ -28,9 +28,9 @@ namespace RollABall.Core.Bootstrap
 
             InitializeGlobalSystems();
 
-            SceneManager.LoadScene(1); // índice 1 = 01_intro en Build Settings
-
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            SceneManager.LoadScene(1);
         }
 
         private void InitializeGlobalSystems()

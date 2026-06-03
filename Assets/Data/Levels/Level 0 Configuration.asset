@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721ec409705ee1547ae3c80e280d21d2, type: 3}
   m_Name: Level 0 Configuration
   m_EditorClassIdentifier: 
+  _levelName: The Awakening
   _totalKeys: 1
   _maxScore: 1000

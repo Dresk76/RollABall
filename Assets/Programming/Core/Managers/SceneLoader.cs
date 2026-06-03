@@ -35,7 +35,7 @@ namespace RollABall.Core.Managers
         {
             _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
             _eventBus.Subscribe<LoadSceneEvent>(HandleLoadSceneRequested);
-            _eventBus.Subscribe<LevelRestartRequestedEvent>(HandleLevelRestartRequested);
+            _eventBus.Subscribe<FallRestartEvent>(HandleFallRestart);
         }
 
         // ─── Handlers ─────────────────────────────────────────────────
@@ -50,7 +50,7 @@ namespace RollABall.Core.Managers
             LoadScene(sceneName);
         }
 
-        private void HandleLevelRestartRequested(LevelRestartRequestedEvent e)
+        private void HandleFallRestart(FallRestartEvent e)
         {
             ReloadCurrentScene();
         }
@@ -71,7 +71,7 @@ namespace RollABall.Core.Managers
         public void Dispose()
         {
             _eventBus?.Unsubscribe<LoadSceneEvent>(HandleLoadSceneRequested);
-            _eventBus?.Unsubscribe<LevelRestartRequestedEvent>(HandleLevelRestartRequested);
+            _eventBus?.Unsubscribe<FallRestartEvent>(HandleFallRestart);
         }
 
         private void OnDestroy()

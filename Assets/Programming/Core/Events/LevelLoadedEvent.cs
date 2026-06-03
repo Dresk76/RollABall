@@ -4,11 +4,13 @@ namespace RollABall.Core.Events
     {
         public readonly int TotalKeys;
         public readonly int MaxScore;
+        public readonly string LevelName;
 
-        public LevelLoadedEvent(int totalKeys, int maxScore)
+        public LevelLoadedEvent(int totalKeys, int maxScore, string levelName)
         {
-            TotalKeys = totalKeys;
-            MaxScore = maxScore;
+            TotalKeys  = totalKeys;
+            MaxScore   = maxScore;
+            LevelName  = levelName;
         }
     }
 }

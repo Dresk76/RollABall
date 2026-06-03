@@ -36,7 +36,8 @@ namespace RollABall.Core.Bootstrap
         {
             eventBus.Publish(new LevelLoadedEvent(
                 _levelConfiguration.TotalKeys,
-                _levelConfiguration.MaxScore
+                _levelConfiguration.MaxScore,
+                _levelConfiguration.LevelName
             ));
 
             foreach (Key key in _keys)
@@ -48,7 +49,12 @@ namespace RollABall.Core.Bootstrap
             _areaReload.Initialize(eventBus);
             _areaVictory.Initialize(eventBus);
 
-            _levelController = new LevelController(eventBus, _levelConfiguration.MaxScore, _areaVictory);
+            _levelController = new LevelController(
+                eventBus,
+                _levelConfiguration.MaxScore,
+                _levelConfiguration.TotalKeys,  // ← nuevo
+                _areaVictory
+            );
         }
 
         // ─── Ciclo de vida ────────────────────────────────────────────

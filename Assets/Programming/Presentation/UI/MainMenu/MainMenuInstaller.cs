@@ -1,5 +1,6 @@
 using RollABall.Core.Events;
 using RollABall.Core.Interfaces;
+using RollABall.Infrastructure.Save;
 using RollABall.Presentation.UI.Buttons;
 using UnityEngine;
 
@@ -20,6 +21,12 @@ namespace RollABall.Presentation.UI.MainMenu
         public void Initialize(IEventBus eventBus)
         {
             _controller = new MainMenuController(_view, _hoverableButtons, eventBus);
+
+            var progress      = SaveSystem.Load();
+            bool hasActiveGame = progress.HasPlayedBefore &&
+                                 progress.NextLevelToPlay > 0;
+
+            eventBus.Publish(new GameReadyEvent(hasActiveGame));
         }
 
         private void OnDestroy()

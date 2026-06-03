@@ -9,15 +9,17 @@ namespace RollABall.Domain.Gameplay.Level
     {
         private readonly IEventBus _eventBus;
         private readonly int _maxScore;
-        private readonly AreaVictory _areaVictory; // ← referencia al área
+        private readonly int _totalKeys;
+        private readonly AreaVictory _areaVictory;
 
         private float _elapsedTime;
         private bool _isRunning;
 
-        public LevelController(IEventBus eventBus, int maxScore, AreaVictory areaVictory)
+        public LevelController(IEventBus eventBus, int maxScore, int totalKeys, AreaVictory areaVictory)
         {
-            _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-            _maxScore = maxScore;
+            _eventBus   = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+            _maxScore   = maxScore;
+            _totalKeys  = totalKeys;
             _areaVictory = areaVictory ?? throw new ArgumentNullException(nameof(areaVictory));
 
             _eventBus.Subscribe<TrapDoorOpenEvent>(HandleTrapDoorOpen);
@@ -37,7 +39,7 @@ namespace RollABall.Domain.Gameplay.Level
             _isRunning = false;
 
             int finalScore = CalculateScore(_elapsedTime, _maxScore);
-            _areaVictory.SetFinalScore(finalScore); // ← le pasa el score al área
+            _areaVictory.SetLevelResults(finalScore, _totalKeys, _elapsedTime);
         }
 
         private int CalculateScore(float time, int maxScore)

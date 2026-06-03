@@ -17,7 +17,7 @@ namespace RollABall.Domain.Gameplay.Environment
         {
             if (!other.CompareTag("Player")) return;
 
-            _eventBus.Publish(new LevelRestartRequestedEvent());
+            _eventBus.Publish(new FallRestartEvent());
         }
 
         public void Dispose()

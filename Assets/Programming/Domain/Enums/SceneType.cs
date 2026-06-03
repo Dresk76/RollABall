@@ -1,4 +1,3 @@
-// SceneType.cs
 namespace RollABall.Domain.Enums
 {
     public enum SceneType
@@ -6,6 +5,9 @@ namespace RollABall.Domain.Enums
         BootstrapScene,
         IntroScene,
         MainMenuScene,
-        IntroductionLevelScene
+        IntroductionLevelScene,
+        Level1Scene,
+        Level2Scene,
+        Level3Scene
     }
 }

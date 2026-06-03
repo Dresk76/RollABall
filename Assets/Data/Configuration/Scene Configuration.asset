@@ -19,3 +19,9 @@ MonoBehaviour:
     SceneName: 02_main_menu
   - SceneType: 3
     SceneName: 03_introduction_level
+  - SceneType: 4
+    SceneName: 04_level_1
+  - SceneType: 5
+    SceneName: 05_level_2
+  - SceneType: 6
+    SceneName: 06_level_3

@@ -1,5 +1,4 @@
 using RollABall.Core.Events;
-using RollABall.Core.Interfaces;
 using System;
 using UnityEngine;
 
@@ -8,8 +7,11 @@ namespace RollABall.Domain.Gameplay.Environment
     public class AreaVictory : MonoBehaviour, IDisposable
     {
         private IEventBus _eventBus;
+        private bool _isActive;
+
         private int _finalScore;
-        private bool _isActive; // solo activa después de que se abra la puerta
+        private int _keys;
+        private float _elapsedSeconds;
 
         public void Initialize(IEventBus eventBus)
         {
@@ -19,7 +21,14 @@ namespace RollABall.Domain.Gameplay.Environment
 
         private void HandleTrapDoorOpen(TrapDoorOpenEvent e)
         {
-            _isActive = true; // ahora sí puede detectar la bola
+            _isActive = true;
+        }
+
+        public void SetLevelResults(int finalScore, int keys, float elapsedSeconds)
+        {
+            _finalScore    = finalScore;
+            _keys          = keys;
+            _elapsedSeconds = elapsedSeconds;
         }
 
         private void OnTriggerEnter(Collider other)
@@ -27,13 +36,8 @@ namespace RollABall.Domain.Gameplay.Environment
             if (!_isActive) return;
             if (!other.CompareTag("Player")) return;
 
-            _isActive = false; // evita publicar dos veces
-            _eventBus.Publish(new LevelCompletedEvent(_finalScore));
-        }
-
-        public void SetFinalScore(int score)
-        {
-            _finalScore = score;
+            _isActive = false;
+            _eventBus.Publish(new LevelCompletedEvent(_finalScore, _keys, _elapsedSeconds));
         }
 
         public void Dispose()

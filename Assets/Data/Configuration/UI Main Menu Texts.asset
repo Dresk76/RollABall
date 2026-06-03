@@ -15,4 +15,14 @@ MonoBehaviour:
   _newGameText: PLAY
   _continueText: CONTINUE
   _optionsText: OPTIONS
+  _newGameBtnText: NEW GAME
+  _loadGameText: LOAD GAME
   _quitText: QUIT
+  _optionsTitleText: OPTIONS
+  _musicLabelText: MUSIC
+  _sfxLabelText: SFX
+  _backText: BACK
+  _loadGameTitleText: LOAD GAME
+  _confirmationMessage: ARE YOU SURE? YOUR CURRENT PROGRESS WILL BE DELETED.
+  _confirmText: CONFIRM
+  _cancelText: CANCEL
