@@ -9,7 +9,6 @@ namespace RollABall.Domain.Gameplay.Keys
         [SerializeField, Tooltip("Tiempo antes de destruirse al ser recogida")]
         private float _harvestTime = 0.1f;
 
-        private const int KeyValue = 1;
         private IEventBus _eventBus;
 
         public void Initialize(IEventBus eventBus)
@@ -19,7 +18,7 @@ namespace RollABall.Domain.Gameplay.Keys
 
         private void OnTriggerEnter(Collider other)
         {
-            _eventBus.Publish(new KeyCollectedEvent(KeyValue));
+            _eventBus.Publish(new KeyCollectedEvent());   // ← sin el 1
             Destroy(gameObject, _harvestTime);
         }
     }

@@ -65,13 +65,18 @@ namespace RollABall.Core.Managers
         {
             _gameModel.Reset();
             _currentLevelIndex = 0;
-            _playerProgress.HasPlayedBefore = true;
-            _playerProgress.LastCompletedLevel = -1; // -1 significa ninguno completado
-            _playerProgress.NextLevelToPlay = 0;
+            _playerProgress.HasPlayedBefore    = true;
+            _playerProgress.LastCompletedLevel = -1;
+            _playerProgress.NextLevelToPlay    = 0;
+
+            if (!_playerProgress.UnlockedLevels.Contains(0))
+            {
+                _playerProgress.UnlockedLevels.Add(0);
+            }
 
             SaveSystem.Save(_playerProgress);
 
-            SetGameState(GameState.Playing);
+            // Ya no publica Playing aquí; lo hace el LevelInstaller al cargar la escena
             _eventBus.Publish(new LoadSceneEvent(
                 _levelProgressionConfig.GetFirstLevel()
             ));
@@ -79,14 +84,12 @@ namespace RollABall.Core.Managers
 
         private void HandleResumeGameRequested(ResumeGameRequestedEvent e)
         {
-            // Lee el progreso fresco del disco
             _playerProgress = SaveSystem.Load();
             _currentLevelIndex = _playerProgress.NextLevelToPlay;
 
             if (_levelProgressionConfig.TryGetLevelByIndex(
                 _currentLevelIndex, out SceneType scene))
             {
-                SetGameState(GameState.Playing);
                 _eventBus.Publish(new LoadSceneEvent(scene));
             }
             else
@@ -103,7 +106,9 @@ namespace RollABall.Core.Managers
 
         private void HandleKeyCollected(KeyCollectedEvent e)
         {
-            _gameModel.AddKeys(e.KeyValue);
+            _gameModel.AddKeys(1);
+
+            _eventBus.Publish(new KeysCountChangedEvent(_gameModel.Keys));
 
             if (_gameModel.Keys >= _totalKeysCurrentLevel)
             {
@@ -142,12 +147,10 @@ namespace RollABall.Core.Managers
                 _currentLevelIndex, out SceneType nextScene))
             {
                 _currentLevelIndex++;
-                SetGameState(GameState.Playing);
                 _eventBus.Publish(new LoadSceneEvent(nextScene));
             }
             else
             {
-                // No hay más niveles → vuelve al MainMenu
                 _eventBus.Publish(new LoadSceneEvent(SceneType.MainMenuScene));
             }
         }
@@ -156,7 +159,6 @@ namespace RollABall.Core.Managers
         {
             Time.timeScale = 1f;
             _gameModel.Reset();
-            SetGameState(GameState.Playing);
             _eventBus.Publish(new FallRestartEvent());
         }
 
@@ -195,19 +197,19 @@ namespace RollABall.Core.Managers
 
         private void HandleNewGameConfirmed(NewGameConfirmedEvent e)
         {
-            // Resetea todo el progreso
-            _playerProgress                      = new PlayerProgress();
-            _playerProgress.HasPlayedBefore      = true;
-            _playerProgress.IntroductionCompleted = false;
+            _playerProgress = new PlayerProgress
+            {
+                HasPlayedBefore = true,
+                IntroductionCompleted = false
+            };
             _playerProgress.UnlockedLevels.Clear();
-            _playerProgress.UnlockedLevels.Add(0); // solo desbloquea nivel 0
+            _playerProgress.UnlockedLevels.Add(0);
 
             SaveSystem.Save(_playerProgress);
 
             _gameModel.Reset();
             _currentLevelIndex = 0;
 
-            SetGameState(GameState.Playing);
             _eventBus.Publish(new LoadSceneEvent(
                 _levelProgressionConfig.GetFirstLevel()
             ));
@@ -218,7 +220,6 @@ namespace RollABall.Core.Managers
             if (_levelProgressionConfig.TryGetLevelByIndex(e.LevelIndex, out SceneType scene))
             {
                 _currentLevelIndex = e.LevelIndex;
-                SetGameState(GameState.Playing);
                 _eventBus.Publish(new LoadSceneEvent(scene));
             }
         }

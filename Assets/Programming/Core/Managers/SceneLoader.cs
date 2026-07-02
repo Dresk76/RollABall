@@ -52,6 +52,7 @@ namespace RollABall.Core.Managers
 
         private void HandleFallRestart(FallRestartEvent e)
         {
+            Time.timeScale = 1f;   // ← por si acaso el tiempo quedó alterado
             ReloadCurrentScene();
         }
 

@@ -7,11 +7,6 @@ namespace RollABall.Presentation.Camera
         private Transform _ball;
         private Vector3 _offset;
 
-        private void OnValidate()
-        {
-            Debug.Assert(_ball != null || true, "Ball will be set via installer");
-        }
-
         public void SetTarget(Transform ball)
         {
             _ball  = ball;

@@ -1,5 +1,6 @@
 using RollABall.Core.Events;
 using RollABall.Core.Interfaces;
+using RollABall.Domain.Enums;
 using RollABall.Domain.Gameplay.Environment;
 using RollABall.Domain.Gameplay.Keys;
 using RollABall.Domain.Gameplay.Level;
@@ -20,6 +21,8 @@ namespace RollABall.Core.Bootstrap
         private LevelConfiguration _levelConfiguration;
 
         private LevelController _levelController;
+        private IEventBus _eventBus;
+        private bool _levelReady;
 
         // ─── Validación ───────────────────────────────────────────────
         private void OnValidate()
@@ -34,7 +37,9 @@ namespace RollABall.Core.Bootstrap
         // ─── Inicialización ───────────────────────────────────────────
         public void Initialize(IEventBus eventBus)
         {
-            eventBus.Publish(new LevelLoadedEvent(
+            _eventBus = eventBus;
+
+            _eventBus.Publish(new LevelLoadedEvent(
                 _levelConfiguration.TotalKeys,
                 _levelConfiguration.MaxScore,
                 _levelConfiguration.LevelName
@@ -52,12 +57,25 @@ namespace RollABall.Core.Bootstrap
             _levelController = new LevelController(
                 eventBus,
                 _levelConfiguration.MaxScore,
-                _levelConfiguration.TotalKeys,  // ← nuevo
+                _levelConfiguration.TotalKeys,
                 _areaVictory
             );
+
+            _levelReady = true;
         }
 
         // ─── Ciclo de vida ────────────────────────────────────────────
+        private void Start()
+        {
+            // Se ejecuta después de que TODOS los Initialize de la escena
+            // terminaron, así el BallController ya está suscrito y recibe
+            // el estado Playing sin perderlo.
+            if (_levelReady)
+            {
+                _eventBus.Publish(new GameStateChangedEvent(GameState.Playing));
+            }
+        }
+
         private void Update()
         {
             _levelController?.Tick(Time.deltaTime);

@@ -19,16 +19,16 @@ namespace RollABall.Presentation.UI.HUD
             _model.OnTimerChanged += HandleTimerChanged;
             _model.OnScoreChanged += HandleScoreChanged;
 
-            _eventBus.Subscribe<KeyCollectedEvent>(HandleKeyCollected);
+            _eventBus.Subscribe<KeysCountChangedEvent>(HandleKeysCountChanged);
             _eventBus.Subscribe<LevelCompletedEvent>(HandleLevelCompleted);
             _eventBus.Subscribe<TimerUpdatedEvent>(HandleTimerUpdated);
             _eventBus.Subscribe<LevelLoadedEvent>(HandleLevelLoaded);
         }
 
         // ─── Handlers EventBus ────────────────────────────────────────
-        private void HandleKeyCollected(KeyCollectedEvent e)
+        private void HandleKeysCountChanged(KeysCountChangedEvent e)
         {
-            _model.SetKeys(e.KeyValue);
+            _model.SetKeys(e.TotalKeys);
         }
 
         private void HandleLevelCompleted(LevelCompletedEvent e)
@@ -69,7 +69,7 @@ namespace RollABall.Presentation.UI.HUD
             _model.OnTimerChanged -= HandleTimerChanged;
             _model.OnScoreChanged -= HandleScoreChanged;
 
-            _eventBus?.Unsubscribe<KeyCollectedEvent>(HandleKeyCollected);
+            _eventBus?.Unsubscribe<KeysCountChangedEvent>(HandleKeysCountChanged);
             _eventBus?.Unsubscribe<LevelCompletedEvent>(HandleLevelCompleted);
             _eventBus?.Unsubscribe<TimerUpdatedEvent>(HandleTimerUpdated);
             _eventBus?.Unsubscribe<LevelLoadedEvent>(HandleLevelLoaded);

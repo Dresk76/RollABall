@@ -38,10 +38,13 @@ namespace RollABall.Presentation.UI.Options
         // ─── Handlers navegación ──────────────────────────────────────
         private void HandleOpenOptions(OpenOptionsRequestedEvent e)
         {
+            // Desuscribe primero para evitar duplicados si ya estaba suscrito
+            _audioModel.OnMusicVolumeChanged -= HandleMusicVolumeChanged;
+            _audioModel.OnSfxVolumeChanged   -= HandleSfxVolumeChanged;
+
             _audioModel.OnMusicVolumeChanged += HandleMusicVolumeChanged;
             _audioModel.OnSfxVolumeChanged   += HandleSfxVolumeChanged;
 
-            if (_view == null) return; // ← verifica que la view existe
             _view.UpdateMusicVolume(_audioModel.MusicVolume);
             _view.UpdateSfxVolume(_audioModel.SfxVolume);
         }

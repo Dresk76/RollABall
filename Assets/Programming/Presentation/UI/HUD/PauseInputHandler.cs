@@ -36,7 +36,7 @@ namespace RollABall.Presentation.UI.HUD
 
             if (_isInOptions)
                 _eventBus.Publish(new CloseOptionsRequestedEvent());
-            else if (_isPaused || !_isPaused)
+            else
                 TogglePause();
         }
 
