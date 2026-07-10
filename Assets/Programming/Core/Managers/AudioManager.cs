@@ -4,6 +4,7 @@ using RollABall.Domain.Enums;
 using RollABall.Domain.Models;
 using RollABall.Infrastructure.Save;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -28,7 +29,6 @@ namespace RollABall.Core.Managers
 
         private IEventBus _eventBus;
         private AudioModel _audioModel;
-        private bool _initialized = false;
 
         private const string MusicParam = "music";
         private const string SfxParam   = "SFX";
@@ -47,16 +47,6 @@ namespace RollABall.Core.Managers
             DontDestroyOnLoad(gameObject);
         }
 
-        private void Start()
-        {
-            // AudioMixer necesita estar listo antes de recibir valores
-            if (_initialized)
-            {
-                ApplyMusicVolume(_audioModel.MusicVolume);
-                ApplySfxVolume(_audioModel.SfxVolume);
-            }
-        }
-
         // ─── Inicialización ───────────────────────────────────────────
         public void Initialize(IEventBus eventBus)
         {
@@ -71,7 +61,17 @@ namespace RollABall.Core.Managers
             _eventBus.Subscribe<AudioVolumeChangedEvent>(HandleAudioVolumeChanged);
             _eventBus.Subscribe<LoadSceneEvent>(HandleLoadScene);
 
-            _initialized = true;
+            // Aplica el volumen inicial de forma segura, esperando a que
+            // el AudioMixer esté listo (no acepta SetFloat el mismo frame).
+            StartCoroutine(ApplyInitialVolume());
+        }
+
+        private IEnumerator ApplyInitialVolume()
+        {
+            yield return null; // espera un frame para que el AudioMixer esté listo
+
+            ApplyMusicVolume(_audioModel.MusicVolume);
+            ApplySfxVolume(_audioModel.SfxVolume);
         }
 
         // ─── Handlers ─────────────────────────────────────────────────

@@ -11,7 +11,6 @@ namespace RollABall.Core.Bootstrap
 {
     public class LevelInstaller : MonoBehaviour, ISceneInitializable
     {
-        // ─── Campos ───────────────────────────────────────────────────
         [SerializeField] private Key[] _keys;
         [SerializeField] private TrapDoor _trapDoor;
         [SerializeField] private AreaReloadCurrentScene _areaReload;
@@ -23,8 +22,8 @@ namespace RollABall.Core.Bootstrap
         private LevelController _levelController;
         private IEventBus _eventBus;
         private bool _levelReady;
+        private bool _playingPublished;
 
-        // ─── Validación ───────────────────────────────────────────────
         private void OnValidate()
         {
             Debug.Assert(_keys != null, nameof(_keys));
@@ -34,7 +33,6 @@ namespace RollABall.Core.Bootstrap
             Debug.Assert(_levelConfiguration != null, nameof(_levelConfiguration));
         }
 
-        // ─── Inicialización ───────────────────────────────────────────
         public void Initialize(IEventBus eventBus)
         {
             _eventBus = eventBus;
@@ -64,20 +62,15 @@ namespace RollABall.Core.Bootstrap
             _levelReady = true;
         }
 
-        // ─── Ciclo de vida ────────────────────────────────────────────
-        private void Start()
-        {
-            // Se ejecuta después de que TODOS los Initialize de la escena
-            // terminaron, así el BallController ya está suscrito y recibe
-            // el estado Playing sin perderlo.
-            if (_levelReady)
-            {
-                _eventBus.Publish(new GameStateChangedEvent(GameState.Playing));
-            }
-        }
-
         private void Update()
         {
+            if (_levelReady && !_playingPublished)
+            {
+                _playingPublished = true;
+                Time.timeScale = 1f;   // ← garantiza tiempo normal al iniciar el nivel
+                _eventBus.Publish(new GameStateChangedEvent(GameState.Playing));
+            }
+
             _levelController?.Tick(Time.deltaTime);
         }
 

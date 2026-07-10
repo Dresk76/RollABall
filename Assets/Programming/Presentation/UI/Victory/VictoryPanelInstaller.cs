@@ -19,6 +19,7 @@ namespace RollABall.Presentation.UI.Victory
 
         public void Initialize(IEventBus eventBus)
         {
+            _controller?.Dispose();
             _controller = new VictoryPanelController(_view, _hoverableButtons, eventBus);
         }
 

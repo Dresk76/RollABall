@@ -3,6 +3,7 @@ using RollABall.Infrastructure.Configuration;
 using RollABall.Presentation.UI.Buttons;
 using RollABall.Presentation.UI.Common;
 using System;
+using UnityEngine;
 
 namespace RollABall.Presentation.UI.Pause
 {
@@ -98,6 +99,7 @@ namespace RollABall.Presentation.UI.Pause
 
         private void HandleMainMenu()
         {
+            Time.timeScale = 1f;   // ← restaura el tiempo antes de salir de la pausa
             _eventBus.Publish(new LoadSceneEvent(Domain.Enums.SceneType.MainMenuScene));
         }
 

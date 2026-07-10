@@ -60,6 +60,7 @@ namespace RollABall.Core.Managers
         public void LoadScene(string sceneName)
         {
             SceneManager.LoadScene(sceneName);
+            Debug.Log("CAMBIO DE SCENE!!!");
         }
 
         public void ReloadCurrentScene()

@@ -15,12 +15,14 @@ namespace RollABall.Presentation.UI.Victory
 
         public void Play()
         {
+            if (_confettiLeft == null || _confettiRight == null) return;
             _confettiLeft.Play();
             _confettiRight.Play();
         }
 
         public void Stop()
         {
+            if (_confettiLeft == null || _confettiRight == null) return;
             _confettiLeft.Stop();
             _confettiRight.Stop();
         }

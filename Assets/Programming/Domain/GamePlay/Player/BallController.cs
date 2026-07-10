@@ -47,13 +47,21 @@ namespace RollABall.Domain.Gameplay.Player
             Vector3 moveDirection = new Vector3(_horizontalInput, 0f, _verticalInput).normalized;
 
             if (moveDirection != Vector3.zero)
+            {
+                if (_rb.IsSleeping())
+                    _rb.WakeUp();
+
                 _rb.AddForce(moveDirection * _moveSpeed, ForceMode.Force);
+            }
         }
 
         private void HandleGameStateChanged(GameStateChangedEvent e)
         {
-            _canMove          = e.NewState == GameState.Playing;
-            _rb.isKinematic   = !_canMove;
+            _canMove        = e.NewState == GameState.Playing;
+            _rb.isKinematic = !_canMove;
+
+            if (_canMove)
+                _rb.WakeUp();
         }
 
         public void Dispose()

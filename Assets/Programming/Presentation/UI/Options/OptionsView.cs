@@ -63,6 +63,8 @@ namespace RollABall.Presentation.UI.Options
 
         public void UpdateMusicVolume(int level)
         {
+            if (_musicVolumeDownButton == null || _musicVolumeUpButton == null) return;
+
             UpdateVolume(_musicVolume, level);
             _musicVolumeDownButton.interactable = level > AudioModel.MinVolume;
             _musicVolumeUpButton.interactable   = level < AudioModel.MaxVolume;
@@ -70,6 +72,8 @@ namespace RollABall.Presentation.UI.Options
 
         public void UpdateSfxVolume(int level)
         {
+            if (_sfxVolumeDownButton == null || _sfxVolumeUpButton == null) return;
+
             UpdateVolume(_sfxVolume, level);
             _sfxVolumeDownButton.interactable = level > AudioModel.MinVolume;
             _sfxVolumeUpButton.interactable   = level < AudioModel.MaxVolume;
