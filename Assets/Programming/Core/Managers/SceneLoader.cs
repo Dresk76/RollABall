@@ -2,6 +2,7 @@ using RollABall.Core.Events;
 using RollABall.Core.Interfaces;
 using RollABall.Infrastructure.Configuration;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,6 +17,7 @@ namespace RollABall.Core.Managers
         private IEventBus _eventBus;
 
         [SerializeField] private SceneConfiguration _sceneConfiguration;
+        
 
         // ─── Ciclo de vida Unity ──────────────────────────────────────
         private void Awake()
@@ -61,6 +63,11 @@ namespace RollABall.Core.Managers
         {
             SceneManager.LoadScene(sceneName);
             Debug.Log("CAMBIO DE SCENE!!!");
+        }
+
+        public IEnumerator SceneLoad(string sceneName)
+        {
+            yield return null;
         }
 
         public void ReloadCurrentScene()
